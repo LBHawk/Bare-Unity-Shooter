@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class EnemyManager : MonoBehaviour
     public float spawnPerWave;              // Number of waves to lower spawn time by 1 second (e.g. value of 20 means lower spawn time by 1/20s per wave0)
     public float spawnTimeFloor;            // Lowest spawnTime possible
     public bool spawningDone = true;
+    public float startSpeed = 5f;
+    public float speedIncrease;
 
 
 
@@ -20,6 +23,7 @@ public class EnemyManager : MonoBehaviour
     {
         // Call the Spawn function after a delay of the spawnTime and then continue to call after the same amount of time.
         //InvokeRepeating("Spawn", spawnTime, spawnTime);
+        enemy.GetComponent<NavMeshAgent>().speed = startSpeed;
     }
 
 
@@ -64,6 +68,7 @@ public class EnemyManager : MonoBehaviour
         }
 
         spawningDone = true;
+        enemy.GetComponent<NavMeshAgent>().speed += speedIncrease;
 
         yield break;
     }

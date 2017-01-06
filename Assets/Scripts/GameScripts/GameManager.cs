@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour {
 	public int timeBetweenWaves;
 	bool waveComplete;
 	bool waiting;
+	public Text waveText;
+	public float textFlashSpeed;
 
 	// Init
 	void Awake () {
@@ -18,6 +20,7 @@ public class GameManager : MonoBehaviour {
 		//waveNumber = 0;
 		waveComplete = true;
 		waiting = false;
+		//waveText = GameObject.Find("WaveText").GetComponent<Text>();
 	}
 	
 	// Check if wave is done, then start a new wave if it is
@@ -33,8 +36,8 @@ public class GameManager : MonoBehaviour {
 			//StartWave();
 			waveComplete = false;
 			waiting = true;
+			//StartCoroutine(FlashText());
 			StartCoroutine(WaveReady());
-			waveNumber++;
 		}
 	}
 
@@ -58,7 +61,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		// Do this so we can wait a few seconds before new wave
-		//StartCoroutine(WaveReady());
+		StartCoroutine(FlashText());
 		waveComplete = true;
 	}
 
@@ -72,13 +75,33 @@ public class GameManager : MonoBehaviour {
 
 	// Pause between waves
 	IEnumerator WaveReady(){
-		yield return new WaitForSeconds(timeBetweenWaves);
+		yield return new WaitForSeconds(timeBetweenWaves / 2);
+		waveNumber++;
+		yield return new WaitForSeconds(timeBetweenWaves / 2);
 		//waveComplete = true;
 		StartWave();
 
 		// Safety mech to ensure wave isnt skipped
 		yield return new WaitForSeconds(3);
 		waiting = false;
+		yield break;
+	}
+
+	IEnumerator FlashText(){
+		float r = waveText.color.r;
+		float g = waveText.color.g;
+		float b = waveText.color.b;
+
+		float startTime = Time.time;
+		for(int i = 0; i < 310; i++)
+		{
+			waveText.color = new Color(r,g,b,(System.Single)(Mathf.Sin((Time.time - startTime + 2.0f) * textFlashSpeed) + 1.0)/2.0f);
+			waveText.material.color = Color.white;
+			yield return null;
+		}
+
+		waveText.color = new Color(r,g,b,1.0f);
+
 		yield break;
 	}
 }
