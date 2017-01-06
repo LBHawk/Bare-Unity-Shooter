@@ -7,11 +7,11 @@ public class EnemyHealth : MonoBehaviour
     public int currentHealth;                   // The current health the enemy has.
     public float sinkSpeed = 2.5f;              // The speed at which the enemy sinks through the floor when dead.
     public int scoreValue = 10;                 // The amount added to the player's score when the enemy dies.
-    //public AudioClip deathClip;                 // The sound to play when the enemy dies.
+    public AudioClip deathClip;                 // The sound to play when the enemy dies.
 
 
     //Animator anim;                              // Reference to the animator.
-    //AudioSource enemyAudio;                     // Reference to the audio source.
+    AudioSource enemyAudio;                     // Reference to the audio source.
     //ParticleSystem hitParticles;                // Reference to the particle system that plays when the enemy is damaged.
     BoxCollider boxCollider;            // Reference to the capsule collider.
     bool isDead;                                // Whether the enemy is dead.
@@ -22,7 +22,7 @@ public class EnemyHealth : MonoBehaviour
     {
         // Setting up the references.
         //anim = GetComponent<Animator>();
-        //enemyAudio = GetComponent<AudioSource>();
+        enemyAudio = GetComponent<AudioSource>();
         //hitParticles = GetComponentInChildren<ParticleSystem>();
         boxCollider = GetComponent<BoxCollider>();
 
@@ -49,7 +49,7 @@ public class EnemyHealth : MonoBehaviour
             return;
 
         // Play the hurt sound effect.
-        //enemyAudio.Play();
+        enemyAudio.Play();
 
         // Reduce the current health by the amount of damage sustained.
         currentHealth -= amount;
@@ -81,8 +81,9 @@ public class EnemyHealth : MonoBehaviour
         //anim.SetTrigger("Dead");
 
         // Change the audio clip of the audio source to the death clip and play it (this will stop the hurt clip playing).
-        //enemyAudio.clip = deathClip;
-        //enemyAudio.Play();
+        enemyAudio.clip = deathClip;
+        enemyAudio.volume = 0.85f;
+        enemyAudio.Play();
         StartSinking();
     }
 
@@ -99,7 +100,7 @@ public class EnemyHealth : MonoBehaviour
         isSinking = true;
 
         // Increase the score by the enemy's score value.
-        //ScoreManager.score += scoreValue;
+        ScoreManager.score += scoreValue;
 
         // After 2 seconds destory the enemy.
         Destroy(gameObject, 2f);
